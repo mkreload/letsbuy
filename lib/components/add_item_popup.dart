@@ -1,8 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:letsbuy/objects/item.dart';
+
 import 'my_inputs_dialog.dart';
 
 class AddItemElement extends StatelessWidget{
+
+  var formKey = GlobalKey<FormState>();
+
+  void saveItem(context){
+    if(this.formKey.currentState.validate()){
+      this.formKey.currentState.save();
+      Item newItem = new Item(MyInputsDialog.name, MyInputsDialog.count, MyInputsDialog.price);
+      Navigator.pop(context);
+    }
+  }
+
+  Text _titlePopup = Text(
+    'Novo Item',
+    style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        color: Colors.purple
+    ),
+  );
+
+  SizedBox _boxSpace(height) => SizedBox.fromSize(size: Size.fromHeight(height),);
+  
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -11,19 +36,12 @@ class AddItemElement extends StatelessWidget{
       content: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Text(
-              'Novo Item',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.purple
-              ),
-            ),
-            SizedBox.fromSize(size: Size.fromHeight(30.0),),
+            this._titlePopup,
+            this._boxSpace(30.0),
             Column(
               children: <Widget>[
                 Form(
-                    key: GlobalKey<FormState>(),
+                    key: this.formKey,
                     child: new Theme(
                       data: ThemeData(
                           hintColor: Colors.black,
@@ -44,7 +62,7 @@ class AddItemElement extends StatelessWidget{
                 ),
               ],
             ),
-            SizedBox.fromSize(size: Size.fromHeight(20.0),),
+            this._boxSpace(20.0),
             Row(
               children: <Widget>[
                 RaisedButton(
@@ -64,7 +82,9 @@ class AddItemElement extends StatelessWidget{
                   margin: EdgeInsets.only(left: 5.0, right: 5.0),
                 ),
                 RaisedButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    this.saveItem(context);
+                  },
                   textColor: Colors.white,
                   child: Text(
                     'Ok',
